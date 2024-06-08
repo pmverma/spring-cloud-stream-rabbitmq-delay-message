@@ -1,0 +1,28 @@
+spring:
+  cloud:
+    stream:
+      bindings:
+        initialTopic-in-0:
+          destination: initialTopic
+          group: a-delay-group
+        finalTopic-in-0:
+          destination: finalTopic
+          group: delay-group
+      rabbit:
+        bindings:
+          initialTopic-in-0:
+            consumer:
+              auto-bind-dlq: true
+              republish-to-dlq: true
+              dlq-ttl: 5000
+              dlq-dead-letter-exchange: "" #DLX
+              dlq-dead-letter-routing-key: finalTopic
+          finalTopic-in-0:
+            consumer:
+              auto-bind-dlq: false
+
+logging:
+  level:
+    root: debug
+    org.springframework.cloud: trace
+    org.springframework.amqp: debug
